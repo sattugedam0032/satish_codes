@@ -1,0 +1,49 @@
+
+bool isSafe(int row, int col, vector<vector<char> > &A, char val){
+    //char t = to_string(val);
+    
+    for(int i=0; i<9; i++){
+        if(A[i][col] == val){
+            return false;        // to check if there is already a entry equal to val in row
+        }
+        if(A[row][i] == val){.    // to check if there is already a entry equal to val in row
+            return false;
+        }
+        if(A[3*(row/3)+i/3][3*(col/3)+i%3] == val){
+            return false;       // to check if there is already a entry equal to val in 3*3 submatrices
+        }
+    }
+    return true;
+}
+
+bool solve(vector<vector<char> > &A){
+    
+    for(int i=0; i< 9; i++){         // this is to traverse through matrix
+        for(int j=0; j<9; j++){
+            
+            if(A[i][j]=='.'){        // any empty space found
+                for(char val ='1'; val<='9'; val++){
+                                                       // checking for each number from 1 to 9 
+                    if(isSafe(i,j,A,val)){
+                        A[i][j] = val;
+                        bool nextcheck = solve(A);     // recurssive call 
+                        
+                        if(nextcheck){          // after recurssive call checking if solution exist or not
+                            return true;
+                        }else{
+                            A[i][j] = '.';
+                            // backtrack
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+void Solution::solveSudoku(vector<vector<char> > &A) {
+     solve (A);
+}
